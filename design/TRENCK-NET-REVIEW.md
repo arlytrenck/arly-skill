@@ -49,7 +49,7 @@ Arly chose to treat all four taste flags as things to change:
 1. Radial gold and teal glows behind hero, latest posts, contact block and footer: remove or replace with a flat or material treatment. This also clears the ai-color-palette hits.
 2. Colored navy box-shadow glow: swap for neutral elevation shadows (the site already defines `--sh-1` and `--sh-2`).
 3. Cream background `--c-paper` #F5F3EC: replace with a deliberate alternative. Note that this token is the ground for the whole palette, so contrast ratios above need rechecking after any change.
-4. Uppercase tracked eyebrow above the hero name: drop or restyle, which also clears wide-tracking.
+4. Uppercase tracked eyebrow above the hero name: drop or restyle. Superseded: kept uppercase and tracked, moved below the name (see Applied).
 
 The site source is not in this repo, so none of this is applied. Two checks stay valid after any redesign: rerun `npx impeccable detect https://trenck.net` and the Lighthouse accessibility audit.
 
@@ -111,7 +111,7 @@ All four decisions were implemented on branch `design-cool-ground` in a local cl
 - Radial glows: 77 `radial-gradient` layers removed from 26 rule groups. Every affected rule kept its linear layer, so no background became empty.
 - Shadows: navy tint replaced with black in the stylesheet (9 places) and 4 inline shadows in page markup.
 - Ground: `--c-paper` #F5F3EC to #F4F6F9, with `--c-sand`, `--c-sand-2`, `--c-code-bg`, the four `--c-line*` tokens and `--c-field-line` (now #78828F, 3.6:1 on the new ground and 3.9:1 on white) retinted cool, plus the paper-derived rgba fades. `site.webmanifest` `background_color` and one inline style on the certifications page updated.
-- Eyebrow: on the home page only, the uppercase tracked line above the name became a sentence-case line under it, in `--c-gold-dark` (6.4:1). Other pages have similar uppercase labels that were not flagged and were left alone.
+- Eyebrow: first done as a sentence-case line under the home page name, then reversed by Arly (2026-09-30). Final state on the home page: the role line is uppercase and letter-spaced, in `--c-gold-dark`, placed below the name. The About page keeps its uppercase line above the title. Other pages' similar labels were left alone. As a result the impeccable `wide-tracking` and `hero-eyebrow-chip` findings are expected to remain.
 - The stylesheet was re-hashed with the site's own script, which rewrote the stylesheet link in every page, including drafts.
 
 **Results against a local copy of the branch**
@@ -148,7 +148,7 @@ Lenses: the `frontend-design` skill (generic-template tells) and the audit check
 
 | Page | Notes from the lenses |
 |------|----------------------|
-| Home | 7 uppercase items (buttons, section links), 8 wide-tracked. Paragraph measure about 77 characters, at the limit. 5 items under 13px. Clean after the eyebrow change. |
+| Home | 7 uppercase items (buttons, section links), 8 wide-tracked. Paragraph measure about 77 characters, at the limit. 5 items under 13px. The role line is uppercase and tracked, by choice, below the name. |
 | About | Still opens with the uppercase tracked role line that the home page no longer has. Paragraph measure about 95 characters, well over the 80 limit. Label trio (Location, Experience, Credentials) is all caps. |
 | Experience | Measure about 69, fine. Dates set in all caps ("MAY 2025 TO PRESENT"), which reads as label chrome, not information. |
 | Skills | 53 uppercase elements, but most are acronyms or issuer names that should stay caps. The real label caps were the credential lines ("ISSUED JUN 2021 / VALID TO NOV 2027"). Fixed, see below. |
@@ -161,7 +161,7 @@ Lenses: the `frontend-design` skill (generic-template tells) and the audit check
 
 **Implemented and merged (2026-09-29 to 09-30):** (a) credential lines on Skills and dates on Experience in sentence case with no tracking, (c) About body paragraphs held to 36em (measured 57 to 65 characters per line, was about 95), (d) inner-page h1 on About, Experience, Skills, Projects, Homelab, Blog and topic pages at `--fs-display-sm` (64px at 1280 wide, was 82px). Verified: the site's strict check passes on 37 pages, Lighthouse accessibility and SEO stay 100 on the six changed pages, impeccable stays at 6 findings (the same false-positive contrast items).
 
-**Not done, chosen not to:** (b) the eyebrow treatment on About and Projects (About still opens with the tracked role line the home page dropped).
+**Not done, chosen not to:** (b) the eyebrow treatment on About and Projects (About keeps its uppercase role line above the title, by choice).
 
 **Dark theme at 1280 wide (all 11 pages, after the changes):** each page reports the dark scheme, no horizontal overflow, and no text failing WCAG AA against its nearest solid background (47 to 140 text elements checked per page; text over gradient or image backgrounds is not covered by that method). One dark screenshot was looked at (terms).
 

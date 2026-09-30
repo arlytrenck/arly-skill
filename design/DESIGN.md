@@ -13,7 +13,7 @@ Navy `--c-navy` #002349 and gold as the brand pair. Sora headings, Libre Frankli
 | Radial gold and teal glows (hero, latest posts, contact, footer) | Delete the `radial-gradient(...)` layers. Keep the existing bottom fade in the hero only if it is needed to blend the graph into the page. Give sections definition with flat bands (paper and white, or navy) and the existing 1px `--c-line` rules. |
 | Colored navy box-shadow glow | The `--sh-1` and `--sh-2` tokens are themselves tinted `rgba(0,20,45,...)` (an earlier draft of this file wrongly called them neutral). Change the tint to `rgba(0,0,0,...)` in the tokens, the stylesheet's own shadows, and the four inline shadows in page markup. |
 | Cream ground `--c-paper` #F5F3EC | Replace with a cool off-white, proposed **#F4F6F9**. Also retint `--c-sand` #ECE8DC, `--c-sand-2`, `--c-code-bg` and the `--c-line*` family toward the same cool hue so warm greys do not clash. |
-| Uppercase tracked eyebrow in the hero | Remove it, or fold the role into the lead sentence ("IT systems engineer and infrastructure architect" as plain sentence-case text under the name). The `<title>` and meta already carry the role for search. |
+| Uppercase tracked eyebrow in the hero | Superseded by a later decision: the line stays uppercase and tracked and sits below the name on the home page. The About page keeps it above the title. |
 
 ## Contrast on the new ground
 
@@ -41,6 +41,6 @@ Rule: gold #A8894F and teal #2FA39A stay off text on the light ground. Use `--c-
 
 ## Verify after the edit
 
-1. `npx impeccable detect https://trenck.net`: expect `radial-spotlight-glow`, `dark-glow`, `cream-palette`, `ai-color-palette`, `wide-tracking` and `hero-eyebrow-chip` to clear. Ignore the `low-contrast` findings, which were false positives before and may remain so.
+1. `npx impeccable detect https://trenck.net`: expect `radial-spotlight-glow`, `dark-glow`, `cream-palette`, `ai-color-palette`, `wide-tracking` and `hero-eyebrow-chip` to remain, since the eyebrow was kept. Ignore the `low-contrast` findings, which were false positives before and may remain so.
 2. Lighthouse accessibility stays 100 on all nine pages.
 3. Look at the hero and the contact block by eye at 375 and 1280 wide. Removing the glows is the change most likely to make sections feel flat, so check rhythm, not just scores.
