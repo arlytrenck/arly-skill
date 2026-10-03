@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="assets/wordmark.png" alt="arly-skill" width="360" />
+</p>
+
 <h1 align="center">/arly</h1>
 
 <p align="center">
