@@ -8,7 +8,7 @@ Every repo below is under `https://github.com/arlytrenck/`. Default branch is `m
 
 https://github.com/arlytrenck/sysadmin-linux
 
-A toolkit of Linux server administration scripts, runbooks, and reference docs, gathered from homelab and small-fleet operations. 39 bash scripts and 48 docs. Bash 4+ and GNU coreutils, checked with ShellCheck in CI.
+A toolkit of Linux server administration scripts, runbooks, and reference docs, gathered from homelab and small-fleet operations. 39 bash scripts and 49 docs. Bash 4+ and GNU coreutils, checked with ShellCheck in CI.
 
 It solves the "same problem on a second host" problem. Each script started as a one-off, then had its paths, thresholds, and package manager parameterized so it works elsewhere. Every script documents its own options with `-h`, and scripts fail safely rather than guessing.
 
@@ -73,7 +73,7 @@ Cheatsheets: SSH, DNS, firewall (including the Docker bypass), systemd, cron and
 
 https://github.com/arlytrenck/sysadmin-windows
 
-The Windows Server counterpart to `sysadmin-linux`: 27 PowerShell scripts and 33 docs, checked with PSScriptAnalyzer in CI. Every script carries comment-based help (`Get-Help .\Name.ps1 -Full`), and anything that changes system state supports `-WhatIf`.
+The Windows Server counterpart to `sysadmin-linux`: 27 PowerShell scripts and 34 docs, checked with PSScriptAnalyzer in CI. Every script carries comment-based help (`Get-Help .\Name.ps1 -Full`), and anything that changes system state supports `-WhatIf`.
 
 It solves the same reuse problem on the Windows side, plus the identity and directory work that a Windows estate carries.
 
@@ -113,6 +113,20 @@ Read the script, run `Get-Help` on it, then run with `-WhatIf` before you let it
 
 Also: `windows-in-the-homelab.md`, `database-backup-restore-guide.md`, `capacity-planning-guide.md`, and cheatsheets for robocopy, scheduled tasks, Windows Firewall, networking, and storage.
 
+## sysadmin-macos
+
+https://github.com/arlytrenck/sysadmin-macos
+
+The macOS companion to `sysadmin-linux` and `sysadmin-windows`: 18 bash scripts and 14 docs, checked with ShellCheck in CI. It is growing incrementally and is smaller than the other two.
+
+Scripts cover disk usage and health, `security-audit.sh` (SIP, Gatekeeper, FileVault, firewall, sharing, admin group), `ssh-key-audit.sh`, `listening-ports-audit.sh`, `backup-verify.sh` (Time Machine), `update-and-patch.sh` (`softwareupdate` and brew), `service-health-check.sh` (launchd), a config snapshot, `package-inventory.sh`, `firewall-rules-dump.sh`, `cert-expiry-check.sh`, `time-sync-check.sh`, `pending-reboot-check.sh`, `process-watchdog.sh`, `network-diagnostics.sh`, and `user-mgmt.sh`. Docs are mostly cheatsheets (macOS BSD-versus-GNU traps, launchd, Homebrew, diskutil and APFS, unified logging). Read a script and run it with `-h` first; `update-and-patch.sh` and `user-mgmt.sh` change the host.
+
+## homi
+
+https://github.com/arlytrenck/homi
+
+A self-hostable homelab dashboard: a service launcher with live HTTP, TCP and ping health checks, uptime history, an ops view with a kiosk mode, and Docker auto-discovery by container label. One container and one SQLite file, built with Next.js and TypeScript, MIT licensed. At v0.1.0 its integrations (Proxmox, Docker, AdGuard Home, UniFi, Sonarr and others) are tested against mock servers, not live instances. It is Arly's featured project on his profile.
+
 ## homelab-public
 
 https://github.com/arlytrenck/homelab-public
@@ -148,5 +162,5 @@ The GitHub profile README: bio, focus areas, certifications, and links. Tool are
 
 ## Notes
 
-- `sysadmin-linux` links to a `sysadmin-macos` companion. It is not public, so do not point users at it.
+- `sysadmin-macos` is public and linked from both sysadmin repos as the macOS companion.
 - Where a question needs a script that is not here, do not pretend one exists. Say so.

@@ -1,17 +1,25 @@
+post https://trenck.net/blog/a-homelab-needs-limits-to-be-good-practice/
 post https://trenck.net/blog/authelia-two-file-access-control-bug/
+post https://trenck.net/blog/bmc-hardening-the-forgotten-interface/
 post https://trenck.net/blog/cloudflare-stuck-dns-publish-fix/
+post https://trenck.net/blog/crowdsec-detection-only-on-caddy/
+post https://trenck.net/blog/emby-to-jellyfin-migration-plan/
+post https://trenck.net/blog/mfa-rollouts-are-a-change-management-project/
 post https://trenck.net/blog/monitoring-without-alerting-is-a-museum/
-post https://trenck.net/blog/security-rollouts-fail-on-people/
-post https://trenck.net/blog/the-best-documentation-you-never-have-to-read/
-post https://trenck.net/blog/ticket-metrics-measure-activity-not-health/
+post https://trenck.net/blog/most-of-my-automation-cant-change-anything/
+post https://trenck.net/blog/my-best-documentation-lives-in-the-scripts/
+post https://trenck.net/blog/nat-hairpin-and-local-dns/
+post https://trenck.net/blog/recurrence-is-the-ticket-metric-i-actually-want/
 post https://trenck.net/blog/watchtower-to-renovate/
 post https://trenck.net/blog/welcome-to-the-blog/
 pub arlytrenck
 pub homelab-public
+pub homi
 pub sysadmin-linux
+pub sysadmin-macos
 pub sysadmin-windows
-repo arlytrenck 5c29d2ce382389ad40f8e771ecd871b6c52b690b
-repo homelab-public 66ad7d426ab0b565a2a277492ef7d37c5a373db0
-repo sysadmin-linux ddf6ec27b0a200ddfa8c9fcbe8f5258f33293944
-repo sysadmin-windows e188a042831ee7a73dac11893f490a551040e952
-stamp 2026-09-25
+repo arlytrenck e4f0075cfc2476d89d51edccd98fa809d4327947
+repo homelab-public 606b9a4ac41153a22fa0623130231b25b4194bd7
+repo sysadmin-linux 2e2ce750b294bcbec8bc93d85b0fec769229d9c3
+repo sysadmin-windows d696c178de284da74b5ba667021405c4a06e2e03
+stamp 2026-10-07

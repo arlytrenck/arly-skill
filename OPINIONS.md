@@ -4,8 +4,8 @@ A compact map of Arly Trenck's viewpoints, taken only from what he has published
 
 Where an entry says "Arly's practice", it is describing what he does on his own systems. Where it says "Arly thinks", it is a stated view. Do not present either as more than that.
 
-_Last updated: 2026-09-25_
-_Sources: 8 published blog posts (2026-09-08 through 2026-09-25), `homelab-public` docs, `sysadmin-linux` and `sysadmin-windows` READMEs, CONTRIBUTING, and `docs/`, the profile README._
+_Last updated: 2026-10-07_
+_Sources: 17 published blog posts (2026-09-08 through 2026-10-07), `homelab-public` docs, `sysadmin-linux` and `sysadmin-windows` READMEs, CONTRIBUTING, and `docs/`, the profile README._
 
 ## Monitoring and alerting
 
@@ -36,6 +36,18 @@ Evidence: https://github.com/arlytrenck/homelab-public/blob/main/docs/lessons-le
 Auto-restart is applied to stateless or easily resumed services, where a silent recovery beats a 2am page. Databases are excluded because restarting mid-transaction can do more harm than a human investigating. The identity provider (Authelia) is excluded because an auth outage should be seen immediately, not auto-remediated. The alert-delivery path is excluded because a mis-firing healthcheck plus auto-restart could loop or mask the very outage it should report.
 Evidence: https://github.com/arlytrenck/homelab-public/blob/main/docs/hardening-conventions.md
 
+### Detect first, then block, and alert on the watcher
+
+Arly's practice with CrowdSec on the public Caddy vhosts: run the engine with no bouncer for a week, so it parses logs and raises alerts but touches no traffic. A ban on a public service can lock out the one person who needs in, himself included, so the design starts with a never-ban list (LAN, tailnet, Docker bridges, loopback) and has Caddy judge the real client address behind Cloudflare, not Cloudflare's edge. Detection data is how he finds false positives without anyone getting a 403 from a guess. The bouncer went live on October 4 after a week of clean detection.
+The watcher gets its own alerts: one if the engine stops answering, one if it is up but has read no log lines for a day, which is the quiet failure of a broken log block or a stale rotated file. He fails open once a bouncer exists, and says that makes the down alert matter more: fail-open without an alert is a switch that turns itself off. He lists the unlogged apex site as a known gap.
+Evidence: https://trenck.net/blog/crowdsec-detection-only-on-caddy/
+
+### Automation that only reads is safe to run everywhere
+
+Arly thinks most automation should be unable to change anything: read state, compare it to expectation, send a message. Its worst bug is a wrong notification, so it can run every twenty minutes, unattended, with broad visibility and no test environment, and adding one costs no thought about misfires. Detection and remediation carry different risk, and bundling them makes the safe half inherit the risky half's blast radius. Read-only intent also needs scoped credentials: a dedicated key per job, and an ordinary user where root is not needed.
+He lets automation act only when the action is narrow, pre-decided, and what a person would do anyway (autoheal restarting a container unhealthy for several minutes, Renovate opening a pull request). He avoids anything shaped like "detect a class of problem and apply whatever fix seems appropriate", because that makes a judgment call at 3am with no reviewer.
+Evidence: https://trenck.net/blog/most-of-my-automation-cant-change-anything/
+
 ## Metrics and reporting
 
 ### Closure speed measures throughput, not health
@@ -45,20 +57,20 @@ Evidence: https://trenck.net/blog/ticket-metrics-measure-activity-not-health/
 
 ### Prefer recurrence, and be honest about what it costs
 
-The metric he would use instead is repeat-ticket rate by root cause, one level below the surface category. A downward trend there means the problem stopped. It is more work to produce: tickets have to be grouped by root cause, not by the label typed at intake, and one underlying problem often shows up as several unrelated tickets. Closure time already exists as a column, while recurrence is a project, so the report shows closure time. He says he has no clean way to produce it yet, and that doing the grouping by hand once a month is the kind of task that does not survive a busy month.
-Evidence: https://trenck.net/blog/ticket-metrics-measure-activity-not-health/
+The metric he would use instead is repeat-ticket rate by root cause, one level below the surface category. A downward trend there means the problem stopped. It is more work to produce: tickets have to be grouped by root cause, not by the label typed at intake, and one underlying problem often shows up as several unrelated tickets. Closure time already exists as a column, while recurrence is a project, so reports default to closure time. His clearest example is password and MFA resets: each closes in minutes and looks like a win, yet they were the biggest repeat source until self-service guides and live sessions took most of them away, while the closure number barely moved. He says Freshservice reports now give him the recurrence view without regrouping the queue by hand each month.
+Evidence: https://trenck.net/blog/ticket-metrics-measure-activity-not-health/ and https://trenck.net/blog/recurrence-is-the-ticket-metric-i-actually-want/
 
 ## Change management and access control
 
 ### An access-control rollout is a change-management project
 
-Arly thinks the technical work of MFA, conditional access, or a new SSO policy is the small part: a few settings, a policy document, a test account. What decides success is the organizational effort around it. Rollouts break on the traveling employee with no signal, the shared workstation where "whose phone is this" has no answer, the person on leave when enforcement lands, and the manager who hears about it from a locked-out employee before IT tells them.
-Evidence: https://trenck.net/blog/security-rollouts-fail-on-people/
+Arly thinks the technical work of MFA, conditional access, or a new SSO policy is the small part: a few settings, a policy document, a test account. What decides success is the organizational effort around it. Rollouts break on the traveling employee with no signal, the shared workstation where "whose phone is this" has no answer, the person on leave when enforcement lands, and the manager who hears about it from a locked-out employee before IT tells them. His sequencing: pilot with a willing, visible group, announce the date earlier than feels necessary, and enforce office by office so the help desk is not taking every call in one week.
+Evidence: https://trenck.net/blog/security-rollouts-fail-on-people/ and https://trenck.net/blog/mfa-rollouts-are-a-change-management-project/
 
 ### Design the failure path first
 
 The first design question is what happens when this fails for a legitimate person outside business hours, and how long they are stuck. If the answer is "until the help desk opens", the rollout is not ready. A control with no fast, legitimate exception path does not remove risk. It moves the risk into a workaround nobody wrote down. Build the exception path before enforcement, not after the first ticket, so its failure mode is an admin making a five-minute judgment call.
-Evidence: https://trenck.net/blog/security-rollouts-fail-on-people/
+Evidence: https://trenck.net/blog/security-rollouts-fail-on-people/ and https://trenck.net/blog/mfa-rollouts-are-a-change-management-project/
 
 ### Judge a rollout six months later
 
@@ -76,6 +88,12 @@ Evidence: https://trenck.net/blog/security-rollouts-fail-on-people/
 
 Two lessons from his own systems point the same way. Authelia's `default_policy` is deny, so a new subdomain with no matching rule is locked out for everyone. Container ports default to `0.0.0.0`, and a media-library manager's VNC port (5900) sat unauthenticated on `0.0.0.0`, reachable from the LAN, until an audit caught it. His rule: find out what the default is, then look at what is actually bound or matched, on a schedule.
 Evidence: https://trenck.net/blog/authelia-two-file-access-control-bug/ and https://github.com/arlytrenck/homelab-public/blob/main/docs/lessons-learned.md
+
+### Audit the interface nobody monitors
+
+Arly's practice: he went through his server's baseboard management controller end to end after it had run for years on day-one settings. It had legacy protocols on that he had never deliberately used (IPMI-over-LAN, SLP, SSDP, CIM-over-HTTPS) and stray RDP and VNC port forwards. He turned the protocols off, removed the forwards, enabled audit logging and set a password-expiration policy. Expect that enabling expiration counts the current password's age retroactively, so plan the change first. He thinks the BMC stays unaudited because it sits outside the monitoring the OS gets and is never what he is thinking about.
+The remaining risk was network placement, not settings: it sat on the flat LAN, which took a network redesign. As of October 7 it is on a management VLAN, and the certificate is still self-signed, which he says plainly.
+Evidence: https://trenck.net/blog/bmc-hardening-the-forgotten-interface/
 
 ### One baseline on every service
 
@@ -121,8 +139,8 @@ Evidence: https://trenck.net/blog/cloudflare-stuck-dns-publish-fix/
 
 ### Check the network layer before blaming the firewall
 
-If a public-facing service works from outside but fails from inside the LAN, check for NAT hairpinning before assuming a firewall or DNS misconfiguration. The fix is a local resolver overriding those specific names to the LAN address, not a change to the service.
-Evidence: https://github.com/arlytrenck/homelab-public/blob/main/docs/lessons-learned.md
+If a public-facing service works from outside but fails from inside the LAN, check for NAT hairpinning before assuming a firewall or DNS misconfiguration. The fix is a local resolver overriding those specific names to the LAN address, not a change to the service. Arly's practice is AdGuard Home answering with the reverse proxy's internal address, offered network-wide by the router over DHCP, since an opt-in fix only helps devices that were configured. He notes it looks like a dead service from the client side, so the first hour went into proxy logs. Comparing what a client outside the LAN saw against one inside took two minutes. The open gap he states: that one resolver is the only DNS the router offers, so rebooting its VM takes DNS down LAN-wide. A second instance on a separate failure domain is planned, not built, and a public fallback would defeat the local answers.
+Evidence: https://trenck.net/blog/nat-hairpin-and-local-dns/ and https://github.com/arlytrenck/homelab-public/blob/main/docs/lessons-learned.md
 
 ## Tooling and dependencies
 
@@ -151,6 +169,11 @@ Evidence: https://trenck.net/blog/watchtower-to-renovate/
 He deployed Rundeck to get run history and a UI for cron-driven backups, then removed it the same day. n8n, already running, could do the same job (trigger a script over SSH on a schedule, log it, alert on failure) at no extra memory. Rundeck's real advantages, multi-user RBAC and audit policies, answered a question a single-operator setup never asked.
 Evidence: https://github.com/arlytrenck/homelab-public/blob/main/docs/lessons-learned.md
 
+### Write the rollback triggers before starting, and be willing to cancel
+
+For a planned Emby to Jellyfin move, Arly wrote down rollback triggers in advance so he could not talk himself into or out of them later, and made the risky part (each user's watch state) a gated step with a read-only diff and a 99 percent bar. Emby stayed untouched until the last phase. In October he decided to stay on Emby and cancelled the cutover because the migration cost outweighed the benefit, and he left the plan post up as written with the update on top. The reasons to leave had been small (closed code, a license tied to one server, a stack leaning toward Jellyfin), not a failure.
+Evidence: https://trenck.net/blog/emby-to-jellyfin-migration-plan/
+
 ## Backups and recovery
 
 ### A backup you have not restored is a belief
@@ -168,6 +191,11 @@ Evidence: https://github.com/arlytrenck/sysadmin-linux/blob/main/docs/disaster-r
 His backup doc has a section on the gaps. Two copies in one physical location is not 3-2-1, and a nightly mirror faithfully replicates a deletion or corruption within about a day. He names the missing leg (an off-site target) instead of implying coverage he does not have. Mirrors that delete carry a `--max-delete` circuit breaker and a trash directory.
 Evidence: https://github.com/arlytrenck/homelab-public/blob/main/docs/backup-strategy.md
 
+### Sort what the NAS holds before deciding what to back up
+
+Data on a NAS is not one category. A re-acquirable media library can be excluded on purpose, if the exclusion is stated. Family photographs and anything with an unreproducible capture date is the row that matters, usually a small share of the volume: backing up a whole share to protect the photos could mean tens of TB of transfer to save tens of GB. He sets RPO and RTO for that second group separately, and says an RTO timed from a same-building mirror measures the wrong scenario.
+Evidence: https://github.com/arlytrenck/homelab-public/blob/main/docs/backup-strategy.md
+
 ### Layer backups by what is being protected
 
 Config, databases, secrets, and history each get a mechanism that fits: nightly config sync, dumped-and-encrypted databases with rotation and checksums, encrypted secret bundles, and a versioned repository with retention and an integrity check on every run.
@@ -182,8 +210,8 @@ Evidence: https://github.com/arlytrenck/sysadmin-linux#why-this-repo-exists and 
 
 ### Keep the explanation inside the thing it explains
 
-Arly thinks a separate notes document goes stale because nothing forces it to change when the script does. What stays accurate is the header and comments in the script itself: what it does, why a flag is set that way, what broke the last time someone tried the obvious alternative. Editing code while leaving the explanation beside it untouched feels wrong in a way that ignoring a wiki page never does. This covers operational detail, not architecture: diagrams and why a system exists still need their own writing. His test: if he cannot tell what a script does and why from the script itself six months later, the gap is in the script.
-Evidence: https://trenck.net/blog/the-best-documentation-you-never-have-to-read/
+Arly thinks a separate notes document goes stale because nothing forces it to change when the script does. What stays accurate is the header and comments in the script itself: what it does, why a flag is set that way, what broke the last time someone tried the obvious alternative. Editing code while leaving the explanation beside it untouched feels wrong in a way that ignoring a wiki page never does. His example is `backup-rotate.sh`, whose comments read like a small incident log: an unvalidated `-k` once made the prune find nothing yet print "Nothing to prune" and exit 0, so retention quietly stopped. Anyone tempted to simplify the code can see what the simpler version cost. This covers operational detail, not architecture: diagrams and why a system exists still need their own writing. His test: if he cannot tell what a script does and why from the script itself six months later, the gap is in the script.
+Evidence: https://trenck.net/blog/the-best-documentation-you-never-have-to-read/ and https://trenck.net/blog/my-best-documentation-lives-in-the-scripts/
 
 ### The docs get opened more than the scripts get run
 
@@ -206,6 +234,11 @@ Evidence: https://trenck.net/blog/welcome-to-the-blog/
 
 Config in git, one command to rebuild the host, backups actually restored from, hardened Compose stacks behind a reverse proxy, and alerting that reaches a phone. Arly treats the homelab as practice for the work he does at the enterprise scale, and calls out his own gaps in public.
 Evidence: https://github.com/arlytrenck/arlytrenck and https://trenck.net/blog/welcome-to-the-blog/
+
+### Fixed limits are the point
+
+Arly's homelab is one Proxmox host with 16 cores and 62 GiB of RAM, carrying a single VM with 55 containers. He thinks unlimited hardware teaches bad habits, because "more hardware or another VM" is always the easy answer. A fixed ceiling forces the trade-offs an employer's budget would, and the skill he practices is saying no to his own ideas. He adds that limits only help when they match real ones: starving a lab on purpose teaches little.
+Evidence: https://trenck.net/blog/a-homelab-needs-limits-to-be-good-practice/
 
 ### Say when it is an opinion
 
