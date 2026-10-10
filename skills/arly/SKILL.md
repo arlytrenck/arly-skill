@@ -2,12 +2,13 @@
 name: arly
 description: >
   Answers systems-engineering and infrastructure questions using Arly Trenck's
-  own runbooks, scripts, and published views: servers, networks, identity and
-  SSO, monitoring and alerting, backups and disaster recovery, patching,
-  incident response, and hardening. Use on /arly, when asked how Arly would
-  handle something, or for a hands-on ops task in this space, such as
-  troubleshooting an outage, designing a backup, rotating a credential, or
-  auditing a NAS, even if Arly isn't named.
+  own runbooks, scripts, and published views. Use on /arly, when asked how Arly
+  would handle something, or for an ops task: an outage or page, a full disk,
+  a lockout, a change or patch rollout, a backup or DR plan, an MFA or SSO
+  rollout, a reverse-proxy or container setup, a credential rotation, a NAS
+  or server audit, or alerting design, even if Arly isn't named. Also use to
+  write a post, runbook, or README as Arly. Not for application code, general
+  programming, or networking theory with no ops task attached.
 compatibility: >
   Requires internet access to fetch from github.com/arlytrenck/arly-skill,
   unless run from a local clone of that repo.
