@@ -31,13 +31,14 @@ Then ask it something:
 
 ## How it works
 
-The skill file is thin on purpose. It loads four files from this repo, from a local clone if you are in one and from GitHub otherwise, and follows them.
+The skill file is thin on purpose. It loads `ENTRY.md`, a short router, from a local clone if you are in one and from GitHub otherwise. The router sends each question to the one or two files it needs, so a typical answer reads a few KB, not the whole repo.
 
-| File | What it does |
+| Path | What it does |
 |------|--------------|
-| `ENTRY.md` | Routes a situation to the right runbook and sets how to answer. |
+| `ENTRY.md` | Routes a situation to the right topic and runbook and sets how to answer. |
+| `topics/` | One short summary per runbook: incident, disk full, patching, backup, and so on. |
+| `OPINIONS.md` | Index of my views. Each section lives in `opinions/`, linked to where I wrote it down. |
 | `TOOLS.md` | My public repos, and which script or doc solves which problem. |
-| `OPINIONS.md` | My views, each linked to where I wrote it down. |
 | `VOICE.md` | How I write. Used only when writing as me. |
 
 ## What it won't use

@@ -24,22 +24,19 @@ If the files cannot be loaded, stop and say so. Do not guess file contents.
 
 ## Loading instructions (session-cached)
 
-Read the **full** content of these files:
+Read the **full** content of `ENTRY.md`. It is a short router. It tells you which
+one or two other files to read for the question, among `topics/<name>.md`,
+`OPINIONS.md` with `opinions/<section>.md`, `TOOLS.md`, and `VOICE.md`.
 
-- `ENTRY.md`
-- `TOOLS.md`
-- `OPINIONS.md`
-- `VOICE.md`
-
-Where to read them from, in order:
+Where to read each file from, in order:
 
 1. If the working directory is a clone of `arlytrenck/arly-skill`, read the local files.
-2. Otherwise fetch `https://raw.githubusercontent.com/arlytrenck/arly-skill/main/<file>`.
+2. Otherwise fetch `https://raw.githubusercontent.com/arlytrenck/arly-skill/main/<path>`.
 3. If raw.githubusercontent.com fails, fall back to
-   `https://cdn.jsdelivr.net/gh/arlytrenck/arly-skill@main/<file>`.
+   `https://cdn.jsdelivr.net/gh/arlytrenck/arly-skill@main/<path>`.
 
 Rules:
 
 1. If a file was already read in full earlier in this session, do not fetch it again.
 2. Do not read any other file from the repo unless `ENTRY.md` says to.
-3. After loading, follow `ENTRY.md` exactly to answer.
+3. After loading `ENTRY.md`, follow it exactly, reading only the files it routes you to.

@@ -76,10 +76,14 @@ own = {"TOOLS.md", "ENTRY.md", "OPINIONS.md", "VOICE.md", "REFRESH.md", "README.
 
 tools = open(f"{root}/TOOLS.md", encoding="utf-8").read()
 entry = open(f"{root}/ENTRY.md", encoding="utf-8").read()
+for d in ("topics", "opinions"):
+    for f in sorted(os.listdir(f"{root}/{d}")):
+        entry += "\n" + open(f"{root}/{d}/{f}", encoding="utf-8").read()
 
 missing = sorted((r, n) for n, r in scripts.items() if n not in tools)
 cited = set(re.findall(r"`([A-Za-z0-9._/-]+\.(?:md|sh|ps1))`", tools + "\n" + entry))
-dead = sorted(n for n in (os.path.basename(c) for c in cited) if n not in existing and n not in own)
+local = lambda c: c.startswith(("topics/", "opinions/"))
+dead = sorted(n for n in (os.path.basename(c) for c in cited if not local(c)) if n not in existing and n not in own)
 
 # A "situation doc": a runbook, checklist, or template TOOLS.md names. If
 # ENTRY.md never mentions it anywhere, a real situation has nothing to route
