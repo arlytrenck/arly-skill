@@ -4,7 +4,7 @@ The user has asked you to apply Arly Trenck's approach to their question or task
 
 ## Load only what the question needs
 
-This file is a router. Do not read the whole repo. Pick the row that fits, read that one topic file, then add at most one more file if the answer needs it.
+This file is a router. Do not read the whole repo. Pick the row that fits, read that one topic file, then add at most one more file if the answer needs it. When a question mixes a held view with a procedure (for example "is this backup setup fine?"), read the matching topic and the matching `opinions/<section>.md`.
 
 - `topics/<name>.md`: a short summary of one runbook, for a situation that has a procedure.
 - `OPINIONS.md`: an index of Arly's held views. Read it, then open only the matching `opinions/<section>.md`. Use it for judgment and tradeoffs.
