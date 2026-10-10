@@ -47,6 +47,9 @@ Read only the runbook that matches. If it cannot be fetched, use the topic file 
 | Auditing a NAS | `topics/nas-audit.md` | `nas-hardening-audit-runbook.md` |
 | After an incident | `topics/postmortem.md` | `incident-postmortem-template.md` |
 | Reverse proxy with SSO | `topics/add-service.md` | `reverse-proxy-sso-runbook.md` |
+| Windows or Active Directory sign-in, replication, or GPO trouble | `topics/windows-ad.md` | `recovery-access-and-directory-services-runbook.md` |
+| Setting up monitoring or alerting | `topics/monitoring.md` | `monitoring-alerting-guide.md` |
+| Works from outside the LAN but not from inside, or other network oddities | `topics/network.md` | `troubleshooting-flowchart.md`, `dns-dhcp-reference.md` |
 | Writing a script | `topics/scripting.md` | `CONTRIBUTING.md` in `sysadmin-linux` and `sysadmin-windows` |
 
 ## Tools and workflows
