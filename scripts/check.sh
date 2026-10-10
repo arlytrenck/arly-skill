@@ -53,6 +53,18 @@ scan "private key material" 'BEGIN [A-Z ]*PRIVATE KEY'
 scan "token prefix" '(ghp_|gho_|github_pat_|xox[baprs]-|AKIA)[A-Za-z0-9_]{8,}'
 scan "private-range IP address" '(^|[^0-9.])(10\.[0-9]{1,3}|192\.168|172\.(1[6-9]|2[0-9]|3[01]))\.[0-9]{1,3}\.[0-9]{1,3}([^0-9]|$)'
 
+# Router integrity: every topics/ and opinions/ file is reachable from ENTRY.md
+# or OPINIONS.md, and every such path they cite exists.
+for f in topics/*.md; do
+  grep -qF "\`$f\`" ENTRY.md || { printf 'FAIL: %s is not routed from ENTRY.md\n' "$f"; status=1; }
+done
+for f in opinions/*.md; do
+  grep -qF "\`$f\`" OPINIONS.md || { printf 'FAIL: %s is not indexed in OPINIONS.md\n' "$f"; status=1; }
+done
+while IFS= read -r ref; do
+  [[ -f "$ref" ]] || { printf 'FAIL: cited path does not exist: %s\n' "$ref"; status=1; }
+done < <(grep -ohE '(topics|opinions)/[a-z0-9-]+\.md' ENTRY.md OPINIONS.md topics/*.md opinions/*.md | sort -u)
+
 if [[ $status -eq 0 ]]; then
   echo "check.sh: clean (${#files[@]} files scanned)"
 fi
